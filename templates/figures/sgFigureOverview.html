@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+{% load static %}
+<head>
+  <meta charset="UTF-8">
+  <title></title>
+
+    <link rel="shortcut icon" type="image/x-icon"   href="{% static 'images/bitbug_favicon.ico' %}" >
+    <link rel="stylesheet" type="text/css" href="{% static 'jquery-easyui-1.8.8/themes/bootstrap/easyui.css' %}">
+	<link rel="stylesheet" type="text/css" href="{% static 'jquery-easyui-1.8.8/themes/icon.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'jquery-easyui-1.8.8/demo/demo.css' %}">
+
+   <link rel="stylesheet" type="text/css" href="{% static 'navigation/style.css' %}">
+    <script type="text/javascript" src="{% static 'jquery-easyui-1.8.8/jquery.min.js' %}"></script>
+	<script type="text/javascript" src="{% static 'jquery-easyui-1.8.8/jquery.easyui.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'jquery-easyui-1.8.8/jquery.easyui.min.js' %}"></script>
+
+    <script type="text/javascript" src="{% static 'Swiper-2.7.6/dist/idangerous.swiper.min.js' %}"></script>
+    <link rel="stylesheet" type="text/css" href="{% static 'Swiper-2.7.6/dist/idangerous.swiper.css' %}">
+    <script type="text/javascript" src="{% static 'echarts/echarts.min.js' %}"></script>
+
+
+  <style>
+/* Demo Styles */
+body {
+  margin: 0;
+  font-family: Helvetica, Helvetica, sans-serif;
+  font-size: 13px;
+  line-height: 1.5;
+}
+.swiper-container {
+  width: 1500px;
+  height: 500px;
+  color: #fff;
+  text-align: center;
+    margin-top: -20px;
+}
+.red-slide {
+  background: #ffffff;
+}
+.blue-slide {
+  background: #4390ee;
+}
+.orange-slide {
+  background: #ff8604;
+}
+.green-slide {
+  background: #49a430;
+}
+.pink-slide {
+  background: #973e76;
+}
+.swiper-slide .title {
+  font-style: italic;
+  font-size: 30px;
+  margin-top: 40px;
+  margin-bottom: 0;
+  line-height: 45px;
+}
+.swiper-slide p {
+  font-style: italic;
+  font-size: 25px;
+}
+.pagination {
+  position: absolute;
+  z-index: 20;
+  left: 10px;
+  bottom: 10px;
+}
+.swiper-pagination-switch {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 8px;
+  background: #555;
+  margin-right: 5px;
+  opacity: 0.8;
+  border: 1px solid #fff;
+  cursor: pointer;
+}
+.swiper-active-switch {
+  background: #e37608;
+}
+  </style>
+</head>
+<body>
+  <div class="swiper-container">
+    <div class="swiper-wrapper">
+      <div class="swiper-slide red-slide">
+           <iframe src="/sgFigures/lineStack?userToken={{ userToken }}" style="width: 100%;height:100%;border:none"></iframe>
+      </div>
+        <!--
+      <div class="swiper-slide bule-slide" style="margin-top: -90px;">
+        <div class="title">Recommended index for different design tools</div>
+         <iframe src="/sgFigures/sgRNASunburst?userToken={{ userToken }}" style="width: 100%;height:100%;border:none"></iframe>
+      </div>-->
+        <!--
+      <div class="swiper-slide orange-slide">
+        <div class="title">Slide 3</div>
+        <p>Keep swiping</p>
+      </div>
+      <div class="swiper-slide green-slide">
+        <div class="title">Slide 4</div>
+        <p>Keep swiping</p>
+      </div>
+      <div class="swiper-slide pink-slide">
+        <div class="title">Slide 5</div>
+        <p>The last one</p>
+      </div>-->
+    </div>
+    <div class="pagination"></div>
+  </div>
+
+  <script>
+  var mySwiper = new Swiper('.swiper-container',{
+    pagination: '.pagination',
+    paginationClickable: true,
+    freeMode: true,
+    freeModeFluid: true
+  })
+  </script>
+</body>
+</html>
