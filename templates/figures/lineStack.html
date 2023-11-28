@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="zh-CN" style="height: 100%">
+<head>
+  <meta charset="utf-8">
+    <link rel="shortcut icon" type="image/x-icon"   href="{% static 'images/bitbug_favicon.ico' %}" >
+    <link rel="stylesheet" type="text/css" href="{% static 'jquery-easyui-1.8.8/themes/bootstrap/easyui.css' %}">
+	<link rel="stylesheet" type="text/css" href="{% static 'jquery-easyui-1.8.8/themes/icon.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'jquery-easyui-1.8.8/demo/demo.css' %}">
+
+   <link rel="stylesheet" type="text/css" href="{% static 'navigation/style.css' %}">
+    <script type="text/javascript" src="{% static 'jquery-easyui-1.8.8/jquery.min.js' %}"></script>
+	<script type="text/javascript" src="{% static 'jquery-easyui-1.8.8/jquery.easyui.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'jquery-easyui-1.8.8/jquery.easyui.min.js' %}"></script>
+
+    <script type="text/javascript" src="{% static 'Swiper-2.7.6/dist/idangerous.swiper.min.js' %}"></script>
+    <link rel="stylesheet" type="text/css" href="{% static 'Swiper-2.7.6/dist/idangerous.swiper.css' %}">
+    <script type="text/javascript" src="https://fastly.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+</head>
+<body style="height: 100%; margin: 0">
+
+<input type="hidden" id="scores" name="scores" value="{{ scores }}">
+
+  <div id="container" style="height: 100%"></div>
+
+
+  <script type="text/javascript">
+      //表示有几根指标线
+      var legenddatalist = ['CNN-Score','RNN-Score','Transformer-Score','CFD-Score','OffTarget-Score','Comprehensive-Score']
+
+      //表示X轴
+      var xAxisdatalist = ['Seq1','Seq2','Seq3','Seq4','Seq5','Seq6','Seq7','Seq8','Seq9','Seq10','Seq11','Seq12','Seq13','Seq14','Seq15','Seq16','Seq17','Seq18','Seq19','Seq20']//xAxisdata.split(",")
+      var scores  = $("#scores").val()
+      var scoresArr = JSON.parse(scores);
+
+
+      var seriesList = []
+      for (let i = 0; i < legenddatalist.length; i++) {
+
+            dataContent = []
+           for(let j = 0;j<xAxisdatalist.length;j++)
+           {
+               dataContent.push(scoresArr[i][j])
+           }
+            var seriesData = {
+              name:legenddatalist[i],
+              type: 'line',
+              //stack: 'Total',
+              data:dataContent
+            }
+            seriesList.push(seriesData)
+    }
+
+
+    var dom = document.getElementById('container');
+    var myChart = echarts.init(dom, null, {
+      renderer: 'canvas',
+      useDirtyRect: false
+    });
+    var app = {};
+
+    var option;
+
+    option = {
+     title: {
+    text: ''
+  },
+  tooltip: {
+    trigger: 'axis'
+  },
+  legend: {
+    data: legenddatalist
+  },
+  grid: {
+    left: '3%',
+    right: '4%',
+    bottom: '3%',
+    containLabel: true
+  },
+  toolbox: {
+    feature: {
+      saveAsImage: {}
+    }
+  },
+  xAxis: {
+    type: 'category',
+    boundaryGap: false,
+    data:xAxisdatalist
+  },
+  yAxis: {
+    type: 'value'
+  },
+  series:seriesList
+      /*
+      [
+    {
+      name: 'CNN Score',
+      type: 'line',
+      stack: 'Total',
+      data: [120, 132, 101, 134, 90, 230, 210,120, 132, 101, 134, 90, 230, 210,120, 132, 101, 134, 90, 230]
+    },
+    {
+      name: 'RNN Score',
+      type: 'line',
+      stack: 'Total',
+      data: [120, 132, 101, 134, 90, 230, 210,120, 132, 101, 134, 90, 230, 210,120, 132, 101, 134, 90, 230]
+    },
+    {
+      name: 'Transformer Score',
+      type: 'line',
+      stack: 'Total',
+      data: [120, 132, 101, 134, 90, 230, 210,120, 132, 101, 134, 90, 230, 210,120, 132, 101, 134, 90, 230]
+    },
+    {
+      name: 'CFD Score',
+      type: 'line',
+      stack: 'Total',
+      data: [120, 132, 101, 134, 90, 230, 210,120, 132, 101, 134, 90, 230, 210,120, 132, 101, 134, 90, 230]
+    },
+    {
+      name: 'Off Target Score',
+      type: 'line',
+      stack: 'Total',
+      data: [120, 132, 101, 134, 90, 230, 210,120, 132, 101, 134, 90, 230, 210,120, 132, 101, 134, 90, 230]
+    }, {
+      name: 'Average Score',
+      type: 'line',
+      stack: 'Total',
+      data: [120, 132, 101, 134, 90, 230, 210,120, 132, 101, 134, 90, 230, 210,120, 132, 101, 134, 90, 230]
+    }
+  ]*/
+};
+
+    if (option && typeof option === 'object') {
+      myChart.setOption(option);
+    }
+
+    window.addEventListener('resize', myChart.resize);
+  </script>
+</body>
+</html>
