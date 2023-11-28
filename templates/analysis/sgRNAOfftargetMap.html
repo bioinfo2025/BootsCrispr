@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <link rel="shortcut icon" type="image/x-icon"   href="{% static 'images/bitbug_favicon.ico' %}" >
+    <link rel="stylesheet" type="text/css" href="{% static 'jquery-easyui-1.8.8/themes/bootstrap/easyui.css' %}">
+	<link rel="stylesheet" type="text/css" href="{% static 'jquery-easyui-1.8.8/themes/icon.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'jquery-easyui-1.8.8/demo/demo.css' %}">
+
+   <link rel="stylesheet" type="text/css" href="{% static 'navigation/style.css' %}">
+    <script type="text/javascript" src="{% static 'jquery-easyui-1.8.8/jquery.min.js' %}"></script>
+	<script type="text/javascript" src="{% static 'jquery-easyui-1.8.8/jquery.easyui.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'jquery-easyui-1.8.8/form.js' %}"></script>
+
+    <title>CRTCrispr</title>
+</head>
+<style>
+.left {
+        float: left;
+        width: 75%;
+        height: 700px;
+
+      }
+      .right {
+        background-color: white;
+        margin-right: 5px;
+      }
+   input[type="checkbox"] {
+      background-color: #fff;
+      border: 2px solid #333;
+       border-color: #0E2D5F;
+       accent-color: #ffab3f;
+       color: #00bbee;
+       height: 16px;
+       width: 16px;
+       margin-top: 2px;
+    }
+   input[type="checkbox"]:checked:before{
+       background-color: #fff;
+      border: 2px solid #333;
+       border-color: #0E2D5F;
+       accent-color: #ffab3f;
+       color: #00bbee;
+       height: 16px;
+       width: 16px;
+        margin-top: 2px;
+   }
+    textarea {
+        position:  relative;
+        border:  1px solid  #D4D4D4;
+        #background-color:  #CCE8CF;
+        vertical-align:  middle;
+        display:  inline-block;
+        white-space:  pre-wrap;
+        margin:  0;
+        padding:  0;
+        -moz-border-radius:  5px  5px  5px  5px;
+        -webkit-border-radius:  5px  5px  5px  5px;
+        border-radius:  5px  5px  5px  5px;
+        font-size: 13px;
+    }
+</style>
+
+<script>
+
+$(function () {
+
+        $(".easyui-accordion .panel-header").click();
+        $(".easyui-accordion .panel-header:last").click();
+
+})
+
+function checkbox(obj)
+{
+}
+
+function clear()
+{
+    $('#criForm').form('clear')
+}
+
+
+
+function submitForm()
+{
+    var userEmail = $('#userEmail').val()
+
+    if (userEmail == "")
+    {
+        $.messager.show({
+                title:'Warning',
+                msg:'Please provide your email in Step 4.',
+                timeout:5000,
+                showType:'slide'
+            });
+
+        return;
+    }
+
+    //document.criForm.submit();
+    //$('#criForm').form('submit');
+    //增加遮罩层
+    $.messager.progress({
+        title: 'Tips',
+        msg: 'Data is being analyzed...',
+        text: 'Do not close current webpage!'
+    });
+    var isValid = $("#criForm").form('validate');
+            if (!isValid) {
+                $.messager.progress('close');//关闭遮罩
+            }
+            else {
+                 document.criForm.submit();
+            }
+
+
+
+}
+
+
+</script>
+<body>
+<div class="left">
+<form action="/sgAnalysisOff/analysis/" method="post" id="criForm" name="criForm" enctype="multipart/form-data">
+ {% csrf_token %}
+      <!--<div title="Step1:Select the appropriate pam sequence" data-options="selected:true" style="width:1000px;overflow:auto;padding:10px;">-->
+    <div class="easyui-panel"   title="<font style='font-family: Helvetica;font-size: 14px;'>Step1:Select the appropriate PAM sequence</font>"  style="width:1000px;padding:10px;font-family: 'Helvetica Black';">
+       <div>
+           <font style='font-family: Helvetica;font-size: 13px;'>PAM type</font><span style="color:red;">*</span>:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <input id="pamtype" name="pamtype" class="easyui-combobox" data-options="
+                    valueField: 'id',
+                    textField: 'text',
+                    url: '{% static 'json/pamlist.json' %}',
+                    onSelect: function(rec){
+                    $('#pamCode').textbox('setValue', rec.code);
+                    }" required="true" style="width: 200px;">
+        </div>
+        <div>
+            <font style='font-family: Helvetica;font-size: 13px;'>PAM sequence</font><span style="color:red;">*</span>:	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <input  class="easyui-textbox" id="pamCode" name="pamCode"  labelWidth="120px" data-options="required:true,novalidate:true" required="true" style="width: 200px;"/>
+        </div>
+    </div>
+    <div class="easyui-panel"   title="<font style='font-family: Helvetica;font-size: 14px;'>Step2:Specify the gene manipulation</font>"  style="width:1000px;padding:10px;">
+        <div>
+             <div>
+                 <font style='font-family: Helvetica;font-size: 13px;'> Select a genome:</font>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                   <input id="genName" name="genName" class="easyui-combobox" data-options="
+
+                    valueField: 'geneName',
+                    textField: 'geneName',
+                    url: '{% static 'json/chromosome.json' %}',
+                    onSelect: function(rec){
+                    }" required="true" style="width: 200px;">
+
+            </div>
+
+            <div>
+                <font style='font-family: Helvetica;font-size: 13px;'>gene sequence:</font>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                  <textarea id="genSeq" rows=5 name="genSeq" style="width: 400px;" class="textarea easyui-validatebox" ></textarea>
+
+            </div>
+        </div>
+
+    </div>
+    <div class="easyui-panel" title="<font style='font-family: Helvetica;font-size: 14px;'>Step3:Fill in  the mismatch params</font>" style="width:1000px;padding:10px;" >
+       <div>
+           <font style='font-family: Helvetica;font-size: 13px;'>Mismatch number</font><span style="color:red;">*</span>:	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <input  class="easyui-textbox" id="misMatchnumber" name="misMatchnumber"   style="width: 200px;" labelWidth="120px" data-options="required:true,novalidate:true" required="true"/>
+        </div>
+        <div>
+            <font style='font-family: Helvetica;font-size: 13px;'> DNA Bulge Size</font><span style="color:red;">*</span>:	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <input  class="easyui-textbox" id="dnabulgeSize" name="dnabulgeSize"   style="width: 200px;" labelWidth="120px" data-options="required:true,novalidate:true" required="true"/>
+        </div>
+
+         <div>
+             <font style='font-family: Helvetica;font-size: 13px;'>RNA Bulge Size</font><span style="color:red;">*</span>:	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <input  class="easyui-textbox" id="rnabulgeSize" name="rnabulgeSize"   style="width: 200px;" labelWidth="120px" data-options="required:true,novalidate:true" required="true"/>
+        </div>
+
+    </div>
+    <div class="easyui-panel" title="<font style='font-family: Helvetica;font-size: 14px;'>Step4: Provide your email,we will send results to the email</font>" style="width:1000px;padding:10px;" >
+        <font style='font-family: Helvetica;font-size: 13px;'>Provide your email</font><span style="color:red;">*</span>:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <input class="easyui-textbox" style="width: 200px;" data-options="prompt:'Enter a email address...',validType:'email',required:true" name="userEmail" id="userEmail" style="width: 300px;" labelWidth="600px;" >
+    </div>
+    <div style="text-align: center;margin-top: 30px;">
+    <a id="resetBtn" href="#" class="easyui-linkbutton" data-options="" onclick="clear();">Reset</a>
+    <a id="submitBtn" href="javascript:void(0);" class="easyui-linkbutton" onclick="submitForm();" data-options="">Submit</a>
+    </div>
+</form>
+</div>
+<div class="right">
+        <div style="float: right;">
+        <img src="{% static 'images/tips.png' %}" style="width: 300px;margin-top: -50px;" >
+        </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="shortcut icon" type="image/x-icon"   href="{% static 'images/bitbug_favicon.ico' %}" >
+    <link rel="stylesheet" type="text/css" href="{% static 'jquery-easyui-1.8.8/themes/bootstrap/easyui.css' %}">
+	<link rel="stylesheet" type="text/css" href="{% static 'jquery-easyui-1.8.8/themes/icon.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'jquery-easyui-1.8.8/demo/demo.css' %}">
+
+   <link rel="stylesheet" type="text/css" href="{% static 'navigation/style.css' %}">
+    <script type="text/javascript" src="{% static 'jquery-easyui-1.8.8/jquery.min.js' %}"></script>
+	<script type="text/javascript" src="{% static 'jquery-easyui-1.8.8/jquery.easyui.min.js' %}"></script>
+    <title>CRTCrispr Navigation</title>
+    <style>
+    </style>
+    <script>
+    </script>
+</head>
+<body>
+<div >
+
+<div>
+    <h4 style="color:#0c7cd5;font-size: 18px;">My organism’s genome isn’t available on BootsCrispr. How do I add it?</h4>
+    <br>
+    <span style="font-size: 14px;">
+        A:You can contact us through the Contact module and leave your email, and we will initialize the species data for you.
+    </span>
+    <br><br>
+    <h4 style="color:#0c7cd5;font-size: 18px;">If the experimental results are lost, how can they be retrieved?</h4>
+    <br>
+    <span style="font-size: 14px;">
+        A:You only need to provide us with your task token through the Contact module and leave your email. After receiving your information, we will send you the relevant tasks.
+    </span>
+    <br><br>
+    <h4 style="color:#0c7cd5;font-size: 18px;">What should I do if I want to execute tasks in bulk?</h4>
+    <br>
+    <span style="font-size: 14px;">
+        A:Both the sgRNA Design and Search Off Targets modules support batch task execution. The "sgRNA Design" module selects "Using gene sequence" or "Using fasta file" with ">" as the interval between sequences. The 'Search Off Targets' module uses'>' as the interval when inputting sequences.
+    </span>
+
+      <br><br>
+    <h4 style="color:#0c7cd5;font-size: 18px;">What should I do if an error occurs during the data analysis process?</h4>
+    <br>
+    <span style="font-size: 16px;">
+        A:You provide your analysis related data, and we will solve the related errors for you.
+    </span>
+
+     <br><br>
+    <h4 style="color:#0c7cd5;font-size: 18px;">Any other queries ?</h4>
+    <br>
+    <span style="font-size: 16px;">
+        A:If you encounter any issues during the use of BootsCrispr, you can contact us through the Contact module. As long as you provide your email, we will solve them for you upon receipt.
+    </span>
+
+
+
+</div>
+
+
+</div>
+
+</body>
+</html>

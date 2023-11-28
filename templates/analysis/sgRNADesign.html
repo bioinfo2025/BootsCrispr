@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+{% load static %}
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>sgRNA Design</title>
+    <link rel="shortcut icon" type="image/x-icon"   href="{% static 'images/bitbug_favicon.ico' %}" >
+    <link rel="stylesheet" type="text/css" href="{% static 'jquery-easyui-1.8.8/themes/bootstrap/easyui.css' %}">
+	<link rel="stylesheet" type="text/css" href="{% static 'jquery-easyui-1.8.8/themes/icon.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'jquery-easyui-1.8.8/demo/demo.css' %}">
+
+   <link rel="stylesheet" type="text/css" href="{% static 'navigation/style.css' %}">
+    <script type="text/javascript" src="{% static 'jquery-easyui-1.8.8/jquery.min.js' %}"></script>
+	<script type="text/javascript" src="{% static 'jquery-easyui-1.8.8/jquery.easyui.min.js' %}"></script>
+    <script>
+
+$(function () {
+
+        $(".easyui-accordion .panel-header").click();
+        $(".easyui-accordion .panel-header:last").click();
+
+})
+
+function checkbox(obj)
+{
+}
+
+function clear()
+{
+    $('#criForm').form('clear')
+}
+
+
+
+function submitForm() {
+    var preWay = "";
+    var userEmail = $('#userEmail').val();
+    let  genName1 = $('#genName1').val();
+    let  genName2 = $('#genName2').val();
+    let  genName3 = $('#genName3').val();
+    let  genName = '';
+    if(genName1 != '')
+    {
+        genName = genName1
+    }
+    if(genName2 != '')
+    {
+        genName = genName2
+    }
+    if(genName3 != '')
+    {
+        genName = genName3
+    }
+    $("#genName").val(genName);
+   // alert($("#genName").val())
+    //获取
+    if ($('#cnnpreWay').prop('checked')) {
+        // do something
+        preWay += ",CNN";
+    }
+    if ($('#rnnpreWay').prop('checked')) {
+        // do something
+        preWay += ",RNN";
+    }
+    if ($('#tranpreWay').prop('checked')) {
+        // do something
+        preWay += ",Transformer";
+    }
+    $("#preWay").val(preWay);
+
+    if (preWay == "") {
+
+        $.messager.show({
+            title: 'Warning',
+            msg: 'Please select at least one prediction method.',
+            timeout: 5000,
+            showType: 'slide'
+        });
+
+        return;
+    }
+    if (userEmail == "") {
+        $.messager.show({
+            title: 'Warning',
+            msg: 'Please provide your email in Step 4.',
+            timeout: 5000,
+            showType: 'slide'
+        });
+
+        return;
+    }
+
+    //增加遮罩层
+    $.messager.progress({
+        title: 'Tips',
+        msg: 'Data is being analyzed...',
+        text: 'Do not close current webpage!'
+    });
+
+     $("#criForm").submit();
+     /*
+    var isValid = $("#criForm").form('validate');
+    if (!isValid) {
+        alert("22")
+        $.messager.progress('close');//关闭遮罩
+    } else {
+        alert(11);
+
+        document.criForm.submit();
+    }*/
+
+}
+
+</script>
+    <style>
+.left {
+        float: left;
+        width: 75%;
+        height: 700px;
+
+      }
+      .right {
+        background-color: white;
+        margin-right: 5px;
+      }
+
+   input[type="checkbox"] {
+      background-color: #fff;
+      border: 2px solid #333;
+       border-color: #0E2D5F;
+       accent-color: #ffab3f;
+       color: #00bbee;
+       height: 16px;
+       width: 16px;
+       margin-top: 2px;
+    }
+   input[type="checkbox"]:checked:before{
+       background-color: #fff;
+      border: 2px solid #333;
+       border-color: #0E2D5F;
+       accent-color: #ffab3f;
+       color: #00bbee;
+       height: 16px;
+       width: 16px;
+        margin-top: 2px;
+   }
+    textarea {
+        position:  relative;
+        border:  1px solid  #D4D4D4;
+        #background-color:  #CCE8CF;
+        vertical-align:  middle;
+        display:  inline-block;
+        white-space:  pre-wrap;
+        margin:  0;
+        padding:  0;
+        -moz-border-radius:  5px  5px  5px  5px;
+        -webkit-border-radius:  5px  5px  5px  5px;
+        border-radius:  5px  5px  5px  5px;
+        font-size: 13px;
+    }
+    .easyui-panel
+    {
+        font-family: Helvetica;
+    }
+</style>
+</head>
+<body>
+<div class="left">
+    <form action="/sgAnalysis/analysis/" method="post" id="criForm" name="criForm" enctype="multipart/form-data">
+       {% csrf_token %}
+      <!--<div title="Step1:Select the appropriate pam sequence" data-options="selected:true" style="width:1000px;overflow:auto;padding:10px;">-->
+    <div class="easyui-panel"  title="<font style='font-family: Helvetica;font-size:14px;'>Step1:Select the appropriate PAM sequence</font>"  style="width:1000px;padding:10px;">
+       <div>
+           <font style='font-family: Helvetica;font-size:13px;'>PAM type</font><span style="color:red;">*</span>:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <input id="pamtype" name="pamtype" class="easyui-combobox" data-options="
+
+                    valueField: 'id',
+                    textField: 'text',
+                    url: '{% static 'json/pamlist.json' %}',
+                    onSelect: function(rec){
+                    $('#pamCode').textbox('setValue', rec.code);
+                    $('#seqLen').textbox('setValue', rec.length);
+                    //根据pamCode 得到预测方式
+                    //alert(rec.code);
+                    }" required="true" style="width: 200px;">
+        </div>
+        <div>
+            <font style='font-family: Helvetica;font-size:13px;'> PAM sequence</font><span style="color:red;">*</span>:	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <input  class="easyui-textbox" id="pamCode" name="pamCode"  labelWidth="120px" data-options="required:true,novalidate:true" required="true" style="width: 200px;"/>
+        </div>
+        <div>
+            <font style='font-family: Helvetica;font-size:13px;'>Target site length (nt)</font><span style="color:red;">*</span>:	&nbsp;&nbsp;&nbsp;&nbsp;
+            <input  class="easyui-textbox" id="seqLen" name="seqLen"  labelWidth="120px" data-options="required:true,novalidate:true" required="true" style="width: 200px;"/>
+        </div>
+    </div>
+    <div class="easyui-panel"   title=" <font style='font-family: Helvetica;font-size:14px;'> Step2:Specify the gene manipulation</font>"  style="width:1000px;padding:10px;">
+    <input type="hidden" name="genName" id="genName"/>
+            <div style="margin-bottom:20px">
+                <span>
+                    <input checked class="easyui-radiobutton"
+                     name="seqtype"
+                     value="0"
+                     label="<font style='font-family: Helvetica;font-size:13px;'>Using database:</font>" labelWidth="120px"
+                     data-options="onChange:function(rec)
+                        {
+                            if(true == rec)
+                            {
+                                $('#step2-1').show();
+                                $('#step2-2').hide();
+                                $('#step2-3').hide();
+                            }
+
+                        },
+                     "
+                    >
+                </span>
+                <span style="margin-left: 50px">
+                    <input class="easyui-radiobutton"
+                     name="seqtype" id="seqtype"
+                     value="1"
+                     label="<font style='font-family: Helvetica;font-size:13px;'>Using gene sequence:</font>" labelWidth="140px"
+                     data-options="onChange:function(rec)
+                        {
+                            if(true == rec)
+                            {
+                                $('#step2-1').hide();
+                                $('#step2-2').show();
+                                $('#step2-3').hide();
+                            }
+
+                        },
+                     "
+                    >
+                </span>
+                <span style="margin-left: 50px">
+                    <!--<img src="{% static 'images/help.png' %}" style="width: 15px;height: 15px;">
+                    -->
+                    <font style='font-family: Helvetica;font-size:13px;'>Using fasta file:</font>
+                    <input class="easyui-radiobutton"
+                     name="seqtype" id="seqtype"
+                     value="2" labelWidth="120px"
+                     data-options="onChange:function(rec)
+                        {
+                            if(true == rec)
+                            {
+                                $('#step2-1').hide();
+                                $('#step2-2').hide();
+                                $('#step2-3').show();
+                            }
+
+                        },
+                     "
+                    >
+                </span>
+            </div>
+
+
+        <div id="step2-1">
+            <div>
+                <font style="font-family: Helvetica;font-size: 13px;"> Select a genome:</font>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <input id="genName1" name="genName1" class="easyui-combobox" data-options="
+
+                    valueField: 'geneName',
+                    textField: 'geneName',
+                    url: '{% static 'json/chromosome.json' %}',
+                    onSelect: function(rec){
+                     //得到数组开始遍历赋值预测方法
+                     preWays = rec.predictWays;
+                     preWayArr = preWays.split(',');
+                      $('#cnnpreWay').prop('checked',false);
+                      $('#rnnpreWay').prop('checked',false);
+                      $('#tranpreWay').prop('checked',false);
+                     for(let i =0 ;i<preWayArr.length;i++)
+                     {
+                       if(preWayArr[i] == 'CNN')
+                       {
+                            $('#cnnpreWay').prop('checked',true);
+                       }
+                       if(preWayArr[i] == 'RNN')
+                       {
+                            $('#rnnpreWay').prop('checked',true);
+                       }
+                       if(preWayArr[i] == 'Transformer')
+                       {
+                            $('#tranpreWay').prop('checked',true)
+                       }
+                     }
+                    }" required="true" style="width: 200px;">
+            </div>
+            <div>
+                <font style="font-family: Helvetica;font-size: 13px;">  the organism:</font>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <input style="width: 200px;" id="organism" class="easyui-combobox" data-options="
+                        valueField: 'id',
+                        textField: 'text',
+                        data:'[{}]'
+                         ">
+
+            </div>
+        </div>
+        <div id="step2-2" style="display: none;">
+             <div>
+                 <font style="font-family: Helvetica;font-size: 13px;"> Select a genome:</font>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<!--
+                 <input  class="easyui-textbox" id="genName" name="genName"  labelWidth="120px" data-options="required:true,novalidate:true" style="width: 270px;"/>
+     -->
+                <input id="genName2" name="genName2" class="easyui-combobox" data-options="
+
+                    valueField: 'geneName',
+                    textField: 'geneName',
+                    url: '{% static 'json/chromosome.json' %}',
+                    onSelect: function(rec){
+                     //得到数组开始遍历赋值预测方法
+                     preWays = rec.predictWays;
+                     preWayArr = preWays.split(',');
+                      $('#cnnpreWay').prop('checked',false);
+                      $('#rnnpreWay').prop('checked',false);
+                      $('#tranpreWay').prop('checked',false);
+                     for(let i =0 ;i<preWayArr.length;i++)
+                     {
+                       if(preWayArr[i] == 'CNN')
+                       {
+                            $('#cnnpreWay').prop('checked',true);
+                       }
+                       if(preWayArr[i] == 'RNN')
+                       {
+                            $('#rnnpreWay').prop('checked',true);
+                       }
+                       if(preWayArr[i] == 'Transformer')
+                       {
+                            $('#tranpreWay').prop('checked',true)
+                       }
+                     }
+                    }" required="true" style="width: 200px;">
+
+            </div>
+
+            <div>
+                <font style="font-family: Helvetica;font-size: 13px;"> gene sequence:</font>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+                <textarea id="genSeq" rows=5 name="genSeq" style="width: 400px;" class="textarea easyui-validatebox" ></textarea>
+            </div>
+        </div>
+        <div id="step2-3" style="display: none;">
+            <div>
+                <font style="font-family: Helvetica;font-size: 13px;"> Select a genome:</font>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <!--
+                <input  class="easyui-textbox" id="genName" name="genName"  labelWidth="120px" data-options="required:true,novalidate:true" style="width: 270px;"/>
+-->
+               <input id="genName3" name="genName3" class="easyui-combobox" data-options="
+
+                    valueField: 'geneName',
+                    textField: 'geneName',
+                    url: '{% static 'json/chromosome.json' %}',
+                    onSelect: function(rec){
+                     //得到数组开始遍历赋值预测方法
+                     preWays = rec.predictWays;
+                     preWayArr = preWays.split(',');
+                     //去除所有选择
+                     $('#cnnpreWay').prop('checked',false);
+                      $('#rnnpreWay').prop('checked',false);
+                      $('#tranpreWay').prop('checked',false);
+                     for(let i =0 ;i<preWayArr.length;i++)
+                     {
+                       if(preWayArr[i] == 'CNN')
+                       {
+                            $('#cnnpreWay').prop('checked',true);
+                       }
+                       if(preWayArr[i] == 'RNN')
+                       {
+                            $('#rnnpreWay').prop('checked',true);
+                       }
+                       if(preWayArr[i] == 'Transformer')
+                       {
+                            $('#tranpreWay').prop('checked',true)
+                       }
+                     }
+                    }" required="true" style="width: 200px;">
+            </div>
+              <!--
+            <div>
+                Upload fasta file:&nbsp;&nbsp;&nbsp;&nbsp;&nibsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <input class="easyui-filebox" id="fastaFile" name="fastaFile" style="width:360px;" data-options="buttonText: 'choose file',buttonAlign: 'right'">
+            </div>-->
+
+            <div>
+                <font style="font-family: Helvetica;font-size: 13px;"> Upload gene file:</font>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                 <input class="easyui-filebox" id="fastaFile" name="fastaFile" style="width:200px;" data-options="buttonText: 'choose file',buttonAlign: 'right'">
+            </div>
+
+        </div>
+    </div>
+    <div class="easyui-panel" title="Step3:Choose the appropriate predicted methods " style="width:1000px;padding:10px;" >
+        <input type="hidden" name="preWay" id="preWay"/>
+
+		<div style="margin-bottom:20px">
+            <font style="font-family: Helvetica;font-size: 13px;"> CNN:</font>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <input type="checkbox"  name="cnnpreWay" id="cnnpreWay" value="CNN" label="CNN:" labelWidth="100px;" required="true" onclick="checkbox(this)">
+		</div>
+		<div style="margin-bottom:20px">
+            <font style="font-family: Helvetica;font-size: 13px;"> RNN:</font>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <input type="checkbox" name="rnnpreWay" id="rnnpreWay" value="RNN" labelWidth="100px;" label="RNN:" required="true" onclick="checkbox(this)">
+		</div>
+		<div style="margin-bottom:20px">
+            <font style="font-family: Helvetica;font-size: 13px;"> Transformer:</font>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <input type="checkbox" name="tranpreWay" id="tranpreWay" value="Transformer" label="Transformer:" labelWidth="200px;" required="true" onclick="checkbox(this)">
+		</div>
+
+
+    </div>
+      <div class="easyui-panel" title="<font style='font-family: Helvetica;font-size: 14px;'> Step4: Provide your email,we will send results to the email</font>" style="width:1000px;padding:10px;">
+          <font style="font-family: Helvetica;font-size: 13px;"> Provide your email</font><span style="color:red;">*</span>:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          <input class="easyui-textbox" style="width: 200px;" data-options="prompt:'Enter a email address...',validType:'email',required:true" name="userEmail" id="userEmail" style="width: 300px;" labelWidth="600px;" >
+
+
+    </div>
+      <div style="text-align: center;margin-top: 10px;">
+        <a id="resetBtn" href="#" class="easyui-linkbutton" data-options="" onclick="clear();">Reset</a>
+        <a id="submitBtn" href="javascript:void(0);" class="easyui-linkbutton" onclick="submitForm();" data-options="">Submit</a>
+    </div>
+      </form>
+</div>
+<div class="right">
+
+        <div style="float: right;">
+        <img src="{% static 'images/tips.png' %}" style="width: 300px;margin-top: -50px;" >
+        </div>
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+{% load static %}
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>CRTCrispr Result</title>
+    <link rel="shortcut icon" type="image/x-icon"   href="{% static 'images/bitbug_favicon.ico' %}" >
+    <link rel="stylesheet" type="text/css" href="{% static 'jquery-easyui-1.8.8/themes/bootstrap/easyui.css' %}">
+	<link rel="stylesheet" type="text/css" href="{% static 'jquery-easyui-1.8.8/themes/icon.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'jquery-easyui-1.8.8/demo/demo.css' %}">
+     <script type="text/javascript" src="{% static 'echarts/echarts.min.js' %}"></script>
+
+   <link rel="stylesheet" type="text/css" href="{% static 'navigation/style.css' %}">
+    <script type="text/javascript" src="{% static 'jquery-easyui-1.8.8/jquery.min.js' %}"></script>
+	<script type="text/javascript" src="{% static 'jquery-easyui-1.8.8/jquery.easyui.min.js' %}"></script>
+  <link rel="stylesheet" type="text/css" href="{% static 'Swiper-2.7.6/dist/idangerous.swiper.css' %}">
+</head>
+<body>
+<div class="easyui-layout" style="height:900px">
+    <div data-options="region:'west',title:'Your Input Sequences',split:true" style="width:300px;">
+      <input type="hidden" name="seqs" id="seqs" value="{{ seqs }}">
+        <input type="hidden" name="userToken" id="userToken" value="{{ userToken }}">
+         <input type="hidden" name="genName" id="genName" value="{{ genName }}">
+
+      <div id="sm" class="easyui-sidemenu" data-options="data:data,onSelect:test" style="width: 900px;"></div>
+    </div>
+    <div data-options="region:'center',title:'Analysis Results'">
+      <iframe id="myiframe" src="/sgAnalysisOff/sgRNAOfftargetResult?userToken={{ userToken }}&dataIndex=1&genName={{ genName }}" style="width: 100%;height:100%;border:none" ></iframe>
+    </div>
+</div>
+
+ <div style="text-align: center;margin-top: 10px;">
+        <a id="resetBtn" href="#" class="easyui-linkbutton" iconcls="icon-history" data-options="" onclick="retuTo()">Return</a>
+    </div>
+
+    <script type="text/javascript">
+        var seqs  = $("#seqs").val()
+       var seqsArr = JSON.parse(seqs);
+
+        var childrenDatas = [];
+        for(let i =0;i<seqsArr.length;i++)
+        {
+            var childrenData ={"id":1,"text":""};
+            childrenData.id = i+1;
+            childrenData.text =seqsArr[i] ;
+
+            childrenDatas.push(childrenData);
+        }
+        var data =
+
+            [{
+            text: 'Input Sequence',
+            iconCls: 'icon-sum',
+            state: 'open',
+            children: childrenDatas
+                /*
+                [{
+                id:"1",
+                text: 'Option1'
+            },
+                {
+                    "id":"2",
+                text: 'Option2'
+            }]*/
+        }];
+function test(item)
+{
+    let userToken = $("#userToken").val();
+    let genName = $("#genName").val();
+    $("#myiframe").attr("src","/sgAnalysisOff/sgRNAOfftargetResult?userToken="+userToken+"&dataIndex="+item.id+"&genName="+genName)
+}
+
+function retuTo()
+      {
+          history.go(-1);
+      }
+
+    </script>
+</body>
+</html>

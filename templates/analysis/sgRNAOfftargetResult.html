@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+
+    <script type="text/javascript" src="{% static 'jquery-easyui-1.8.8/jquery.min.js' %}"></script>
+	<script type="text/javascript" src="{% static 'jquery-easyui-1.8.8/jquery.easyui.min.js' %}"></script>
+  <link rel="stylesheet" type="text/css" href="{% static 'Swiper-2.7.6/dist/idangerous.swiper.css' %}">
+     <script type="text/javascript" src="{% static 'echarts/echarts.min.js' %}"></script>
+
+    <link rel="shortcut icon" type="image/x-icon"   href="{% static 'images/bitbug_favicon.ico' %}" >
+    <link rel="stylesheet" type="text/css" href="{% static 'jquery-easyui-1.8.8/themes/bootstrap/easyui.css' %}">
+	<link rel="stylesheet" type="text/css" href="{% static 'jquery-easyui-1.8.8/themes/icon.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'jquery-easyui-1.8.8/demo/demo.css' %}">
+
+   <link rel="stylesheet" type="text/css" href="{% static 'navigation/style.css' %}">
+
+    <script type="text/javascript" src="{% static 'paper/js/MyPage.js' %}"></script>
+
+    <title>CRTCrispr Result</title>
+
+    <script>
+       $(function () {
+
+           var piedatas = $("#piedata").val();
+           var pieArr = JSON.parse(piedatas);
+
+           var dom = document.getElementById('container');
+
+            var myChart = echarts.init(dom, null, {
+              renderer: 'canvas',
+              useDirtyRect: false
+            });
+            var app = {};
+
+            var option;
+
+            option = {
+          legend: {
+            top: 'bottom'
+          },
+          toolbox: {
+            show: true,
+            feature: {
+              mark: { show: true },
+              dataView: { show: true, readOnly: false },
+              restore: { show: true },
+              saveAsImage: { show: true }
+            }
+          },
+          series: [
+            {
+              name: 'Nightingale Chart',
+              type: 'pie',
+              radius: [50, 250],
+              center: ['50%', '50%'],
+              roseType: 'area',
+              itemStyle: {
+                borderRadius: 8
+              },
+              data: pieArr
+                  /*
+                  [
+                { value: 40, name: 'rose 1' },
+                { value: 38, name: 'rose 2' },
+                { value: 32, name: 'rose 3' },
+                { value: 30, name: 'rose 4' },
+                { value: 28, name: 'rose 5' },
+                { value: 26, name: 'rose 6' },
+                { value: 22, name: 'rose 7' },
+                { value: 18, name: 'rose 8' }
+              ]*/
+            }
+          ]
+        };
+            if (option && typeof option === 'object') {
+      myChart.setOption(option);
+    }
+
+    window.addEventListener('resize', myChart.resize);
+
+           //加载table
+           let total = $("#total").val();
+            P.initMathod({
+			//elemId为分页标签选择器；total:123为模拟参数数据，真实情况默认为0就可以
+	        params: {elemId: '#Page',total:total,pageIndex:1},
+	        requestFunction: function () {
+
+	            //TODO ajax异步请求过程,异步获取到的数据总条数赋值给 P.config.total
+                var pageindex = P.config.pageIndex;
+                var pageSize = P.config.pageSize;
+                let dataIndex = $("#dataIndex").val();
+                let userToken = $("#userToken").val();
+
+                //加载
+                $.messager.progress({
+                    title: 'Tips',
+                    msg: 'Data is being analyzed...',
+                    text: 'Please waiting!'
+                });
+                //更新table和paper的数据
+                P.config.total = total;
+                //table reload
+				$.ajax({
+					url: '/sgAnalysisOff/sgRNAOfftargetResultJson/',//自己后台请求路径
+					type: 'POST',
+					data: {"dataIndex":dataIndex,"userToken":userToken,"page":pageindex,"rows":pageSize},//请求参数；向后台传递当前页码index = P.config.pageIndex; 显示行数size = P.config.pageSize;
+					dataType: 'json',
+					success: function(res){
+
+                        var seqs = res.data;
+                        var seqsArr = JSON.parse(seqs);
+
+
+                        //{\"crRNA\":\"系统管理\",\"dm\":\"C070018\"}
+                        var misRNAS = [];
+                        var misRNa = {};
+                        for(let i =0;i<seqsArr.length;i++)
+                        {
+                            misRNa = {"crRNA":seqsArr[i].seq,"Bulgetype":seqsArr[i].misBuType,"misDNA":seqsArr[i].misSeq,"Chromosome":seqsArr[i].misChrome,"Location":seqsArr[i].misLocation,"Direction":seqsArr[i].misDirection,"offtargetscore":seqsArr[i].misOfftargetScore,"CFDScore":seqsArr[i].misCFDScore}
+                            misRNAS.push(misRNa);
+                        }
+                        var json={"total":seqsArr.length,"rows":misRNAS};
+                         $('#dg').datagrid('loadData',json);
+                        $.messager.progress('close');
+						//P.config.total = res.count;
+					},
+					error: function(){
+						console.log("程序执行出现异常");
+                         $.messager.progress('close');
+					}
+				});
+
+	            //列表渲染自行处理
+
+	            console.log(JSON.stringify(P.config));
+	        }
+	    });
+});
+
+
+
+
+
+
+
+
+
+
+
+    </script>
+
+   <style >
+			.page{
+
+			}
+			.page ul{
+				padding:0;
+				min-width: 450px;
+			}
+			.page ul::after{
+				content: '';
+				display: block;
+				clear: both;
+			}
+			.page ul li{
+				float: left;
+				width:auto;
+				min-width:50px;
+				height: 30px;
+				line-height:30px;
+				list-style: none;
+			}
+			.page a{
+				color:#666;
+				font-family: "微软雅黑";
+				padding:0 10px;
+				text-decoration: none;
+				display: block;
+				text-align: center;
+				border: 1px solid #888;
+				border-left: none;
+			}
+			.page ul li:first-child a{
+				border-left: 1px solid #666;
+			}
+
+			.page ul li a:hover{
+				background-color: dodgerblue;
+			}
+			.page ul li a:hover{
+				color: white;
+			}
+			.page .disabled a:hover{
+				background-color: white;
+				cursor:not-allowed;
+				color: #888;
+			}
+			.page .active a{
+				background-color: dodgerblue;
+				color: white;
+			}
+
+    </style>
+
+</head>
+<body>
+<!--<b> Analysis pir charts of Results</b>-->
+ <div id="container" style="height: 600px;">
+
+ </div>
+
+<!--<b> Analysis Table of Results</b>-->
+  <!---------{{ data | length }}-->
+ {% csrf_token %}
+<input type="hidden" name="piedata" id="piedata" value="{{ piedata}}">
+<input type="hidden" name="userToken" id="userToken" value="{{ userToken}}">
+<input type="hidden" name="genName" id="genName" value="{{ genName}}">
+<input type="hidden" name="total" id="total" value="{{ total}}">
+<input type="hidden" name="pageIndex" id="pageIndex" value="{{ page}}">
+
+<input type="hidden" name="dataIndex" id="dataIndex" value="{{ dataIndex}}">
+
+    <table id="dg"  class="easyui-datagrid" >
+    <thead>
+		<tr>
+            <th data-options="field:'crRNA'"><font style='font-family: Helvetica;font-size: 13px;'>crRNA</font></th>
+            <th data-options="field:'Bulgetype'" ><font style='font-family: Helvetica;font-size: 13px;'>Bulge type</font></th>
+            <th data-options="field:'misDNA'" ><font style='font-family: Helvetica;font-size: 13px;'>misDNA</font></th>
+            <th data-options="field:'Chromosome'" ><font style='font-family: Helvetica;font-size: 13px;'>Chromosome</font></th>
+            <th data-options="field:'Location'" ><font style='font-family: Helvetica;font-size: 13px;'>Location</font></th>
+            <th data-options="field:'Direction'"  ><font style='font-family: Helvetica;font-size: 13px;'>Direction</font></th>
+            <th data-options="field:'offtargetscore'"  ><font style='font-family: Helvetica;font-size: 13px;'>OffTarget-Score</font></th>
+            <th data-options="field:'CFDScore'"  ><font style='font-family: Helvetica;font-size: 13px;'>CFD-Score</font></th>
+
+        </tr>
+
+
+    </thead>
+
+    <tbody id="mytbody">
+
+
+	</tbody>
+</table>
+<div class="page" id="Page">
+</div>
+
+
+
+
+</body>
+</html>

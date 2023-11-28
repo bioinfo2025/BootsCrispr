@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <link rel="shortcut icon" type="image/x-icon"   href="{% static 'images/bitbug_favicon.ico' %}" >
+    <link rel="stylesheet" type="text/css" href="{% static 'jquery-easyui-1.8.8/themes/bootstrap/easyui.css' %}">
+	<link rel="stylesheet" type="text/css" href="{% static 'jquery-easyui-1.8.8/themes/icon.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'jquery-easyui-1.8.8/demo/demo.css' %}">
+
+   <link rel="stylesheet" type="text/css" href="{% static 'navigation/style.css' %}">
+    <script type="text/javascript" src="{% static 'jquery-easyui-1.8.8/jquery.min.js' %}"></script>
+	<script type="text/javascript" src="{% static 'jquery-easyui-1.8.8/jquery.easyui.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'jquery-easyui-1.8.8/jquery.easyui.min.js' %}"></script>
+
+    <script type="text/javascript" src="{% static 'Swiper-2.7.6/dist/idangerous.swiper.min.js' %}"></script>
+    <link rel="stylesheet" type="text/css" href="{% static 'Swiper-2.7.6/dist/idangerous.swiper.css' %}">
+   <script type="text/javascript" src="{% static 'echarts/echarts.min.js' %}"></script>
+
+    <title>CRTCrispr Figures</title>
+     <style>
+
+        body {
+          margin: 0;
+          font-family: Helvetica, Helvetica, sans-serif;
+          font-size: 13px;
+          line-height: 1.5;
+        }
+        .swiper-container {
+          width: 1200px;
+          height: 600px;
+          color: #e37608;
+          text-align: center;
+        }
+        .red-slide {
+          background: #ffffff;
+        }
+        .blue-slide {
+          background: #ffffff;
+        }
+        .orange-slide {
+          background: #ffffff;
+        }
+        .green-slide {
+          background: #49a430;
+        }
+        .pink-slide {
+          background: #973e76;
+        }
+        .swiper-slide .title {
+          font-style: italic;
+          font-size: 30px;
+          margin-top: 5px;
+          margin-bottom: 0;
+          line-height: 45px;
+        }
+        .swiper-slide p {
+          font-style: italic;
+          font-size: 25px;
+        }
+        .pagination {
+          position: absolute;
+          z-index: 20;
+          left: 10px;
+          top: 10px;
+        }
+        .swiper-pagination-switch {
+          display: block;
+          width: 8px;
+          height: 8px;
+          border-radius: 8px;
+          background: #555;
+          margin: 0 0px 5px;
+          opacity: 0.8;
+          border: 1px solid #fff;
+          cursor: pointer;
+        }
+        .swiper-active-switch {
+          background: #d77506;
+        }
+  </style>
+
+</head>
+<body>
+   <!--头部导航栏 -->
+
+<div  style="width:100%;margin: 80px 20px 0 80px;" >
+ <input type="hidden" name="userToken" id="userToken" value="{{ userToken}}">
+    <input type="hidden" name="dataIndex" id="dataIndex" value="{{ dataIndex}}">
+
+</div>
+<div class="swiper-container">
+    <div class="swiper-wrapper">
+      <div class="swiper-slide blue-slide">
+          <div class="title">Mismatch situation on chromosome distribution</div>
+           <iframe src="/sgFigures/sgRNAPienet?genName={{ genName }}&userToken={{ userToken }}&dataIndex={{ dataIndex }}" style="width: 100%;height:80%;border:none"></iframe>
+      </div>
+      <div class="swiper-slide orange-slide">
+        <div class="title">Heat Map</div>
+        <iframe src="/sgDesigner/sgRNAFigureHeatMap/" style="width: 100%;height:100%;border:none"></iframe>
+      </div>
+
+    </div>
+    <div class="pagination"></div>
+  </div>
+
+
+<div>
+</div>
+
+  <script>
+  var mySwiper = new Swiper('.swiper-container',{
+    pagination: '.pagination',
+    paginationClickable: true,
+    mode: 'vertical'
+  })
+
+
+  function retuTo()
+      {
+          history.go(-1);
+      }
+
+
+
+
+
+
+
+  </script>
+
+
+ <div style="text-align: center;margin-top: 10px;">
+        <a id="resetBtn" href="#" class="easyui-linkbutton" iconcls="icon-history" data-options="" onclick="retuTo()">Return</a>
+    </div>
+
+
+
+
+</body>
+</html>

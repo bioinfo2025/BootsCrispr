@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="shortcut icon" type="image/x-icon"   href="{% static 'images/bitbug_favicon.ico' %}" >
+    <link rel="stylesheet" type="text/css" href="{% static 'jquery-easyui-1.8.8/themes/bootstrap/easyui.css' %}">
+	<link rel="stylesheet" type="text/css" href="{% static 'jquery-easyui-1.8.8/themes/icon.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'jquery-easyui-1.8.8/demo/demo.css' %}">
+
+   <link rel="stylesheet" type="text/css" href="{% static 'navigation/style.css' %}">
+    <script type="text/javascript" src="{% static 'jquery-easyui-1.8.8/jquery.min.js' %}"></script>
+	<script type="text/javascript" src="{% static 'jquery-easyui-1.8.8/jquery.easyui.min.js' %}"></script>
+    <title>CRTCrispr Navigation</title>
+    <style>
+
+
+    </style>
+    <script>
+        function contact()
+        {
+             //增加遮罩层
+                $.messager.progress({
+                    title: 'Tips',
+                    msg: 'Sending information',
+                    text: 'Do not close current webpage!'
+                });
+                let userEmail = $("#userEmail").val();
+                let emailConent = $("#emailConent").val();
+            $.ajax({
+					url: '/aboutView/contact/',//自己后台请求路径
+					type: 'POST',
+					data: {"userEmail":userEmail,"emailConent":emailConent},//请求参数；向后台传递当前页码index = P.config.pageIndex; 显示行数size = P.config.pageSize;
+					dataType: 'json',
+					success: function(res){
+                        $.messager.progress('close');
+                        $.messager.alert("Warning", "We have receive your letter！！！", "info", function () {
+                        });
+                        $("#userEmail").textbox('clear');
+                        $("#emailConent").textbox('clear');
+                        console.log(res)
+						//P.config.total = res.count;
+					},
+					error: function(){
+						console.log("程序执行出现异常");
+                         $.messager.progress('close');
+					}
+				});
+
+        }
+
+    </script>
+</head>
+<body>
+
+<div style="margin-left: 80px;">
+
+<div style="margin:20px 0;text-align: center;"></div>
+	<div class="easyui-panel" title=" Contact Us" style="width:1000px;height:500px;padding:30px 30px 50px 70px">
+		<div style="margin-bottom:20px">
+			<div>
+            <input class="easyui-textbox" name="userEmail" id="userEmail" data-options="prompt:'Provide your email address...',validType:'email'"  style="width:860px;">
+            </div>
+
+		</div>
+		<div style="margin-bottom:20px">
+			<div>
+                <input style="height:300px;width:860px;" class="easyui-textbox" id="emailConent" name="emailConent" data-options="multiline:true" value="">
+
+            </div>
+		</div>
+
+		<div style="text-align: center;">
+			<a href="#" class="easyui-linkbutton" style="width:160px;" onclick="contact()">Quick Contact</a>
+		</div>
+	</div>
+
+
+</div>
+
+</body>
+</html>

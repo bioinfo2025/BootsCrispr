@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <link rel="shortcut icon" type="image/x-icon"   href="{% static 'images/bitbug_favicon.ico' %}" >
+    <link rel="stylesheet" type="text/css" href="{% static 'jquery-easyui-1.8.8/themes/bootstrap/easyui.css' %}">
+	<link rel="stylesheet" type="text/css" href="{% static 'jquery-easyui-1.8.8/themes/icon.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'jquery-easyui-1.8.8/demo/demo.css' %}">
+
+   <link rel="stylesheet" type="text/css" href="{% static 'navigation/style.css' %}">
+    <script type="text/javascript" src="{% static 'jquery-easyui-1.8.8/jquery.min.js' %}"></script>
+	<script type="text/javascript" src="{% static 'jquery-easyui-1.8.8/jquery.easyui.min.js' %}"></script>
+
+    <title>CRTCrispr Result</title>
+    <style>
+
+
+    </style>
+    <script>
+        //跳转页面
+      function gotoFigure(dataIndex)
+      {
+          let userToken = $("#userToken").val();
+          let genName = $("#genName").val();
+
+          window.location.href='/sgAnalysis/sgRNAFigure?genName='+genName+'&dataIndex='+dataIndex+'&userToken='+userToken;
+      }
+
+      function retuTo()
+      {
+          history.go(-1);
+      }
+
+    </script>
+
+</head>
+<body>
+<div style="margin-top: 10px;height: 550px;">
+   <!-- <b> Analysis Chart of Results</b>-->
+  <iframe src="/sgFigures/showOverview?userToken={{ userToken }}&genName={{ genName }}" style="width: 100%;height:100%;border:none"></iframe>
+</div>
+<div  style="width:100%;margin: 20px 20px 0 80px;" >
+<!--<b> Analysis Table of Results</b>-->
+  <!---------{{ data | length }}-->
+ <input type="hidden" name="userToken" id="userToken" value="{{ userToken}}">
+ <input type="hidden" name="genName" id="genName" value="{{ genName}}">
+    <table class="easyui-datagrid"  >
+    <thead>
+		<tr>
+            <th data-options="field:'sgRNA'"><font style='font-family: Helvetica;font-size: 13px;'>sgRNA</font></th>
+            <th data-options="field:'GC content'" ><font style='font-family: Helvetica;font-size: 13px;'>GC content(%)</font></th>
+            <th data-options="field:'Location'" ><font style='font-family: Helvetica;font-size: 13px;'>Location</font></th>
+            <th data-options="field:'Strand'" ><font style='font-family: Helvetica;font-size: 13px;'>Strand</font></th>
+            <th data-options="field:'CFD-Score',sortable:true,sortvalue:'ASC'" ><font style='font-family: Helvetica;font-size: 13px;'>CFD-Score</font></th>
+            <th data-options="field:'CNNScore',sortable:true,sortvalue:'ASC'"  ><font style='font-family: Helvetica;font-size: 13px;'>CNN Score</font></th>
+            <th data-options="field:'RNNScore',sortable:true,sortvalue:'ASC'"  ><font style='font-family: Helvetica;font-size: 13px;'>RNN Score</font></th>
+            <th data-options="field:'TransformerScore',sortable:true,sortvalue:'ASC'"  ><font style='font-family: Helvetica;font-size: 13px;'>Transformer Score</font></th>
+            <th data-options="field:'OffTargetScore',sortable:true,sortvalue:'ASC'" ><font style='font-family: Helvetica;font-size: 13px;'>OffTarget Score</font> </th>
+            <th data-options="field:'ComprehensiveScore',sortable:true,sortvalue:'ASC'" ><font style='font-family: Helvetica;font-size: 13px;'>Comprehensive Score</font> </th>
+            <th data-options="field:'misMatch'" ><font style='font-family: Helvetica;font-size: 13px;'>misMatch</font></th>
+            <th data-options="field:'Figures'" ><font style='font-family: Helvetica;font-size: 13px;'>Figures</font></th>
+        </tr>
+
+
+    </thead>
+
+    <tbody>
+
+    {% for field in data %}
+
+        <tr>
+         <td style="font-family: Helvetica;font-size: 13px;">
+    	 {{ field.RNAValue }}
+        </td>
+        <td style="font-family: Helvetica;font-size: 13px;">
+    	{{ field.gcPerc }}
+        </td>
+        <td style="font-family: Helvetica;font-size: 13px;">
+    	{{ field.startLoc }}~{{ field.endLoc }}
+        </td>
+        <td style="font-family: Helvetica;font-size: 13px;">
+    	{{ field.strand }}
+        </td>
+       <td style="font-family: Helvetica;font-size: 13px;">
+    	{{ field.CFDscore }}
+        </td>
+            <td style="font-family: Helvetica;font-size: 13px;">
+    	{{ field.cnnScore }}
+        </td>
+            <td style="font-family: Helvetica;font-size: 13px;">
+    	{{ field.rnnScore }}
+        </td>
+
+             <td style="font-family: Helvetica;font-size: 13px;">
+    	{{ field.transScore }}
+        </td>
+        <td style="font-family: Helvetica;font-size: 13px;">
+    	{{ field.OffTargetScore }}
+        </td><td style="font-family: Helvetica;font-size: 13px;">
+    	{{ field.averageScore }}
+        </td>
+             <td style="font-family: Helvetica;font-size: 13px;">
+    	{{ field.misMatch }}
+        </td>
+         <td>
+    	<a id="btn" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search'" onclick="gotoFigure({{forloop.counter}});">SHOW</a>
+        </td>
+
+
+        </tr>
+    {% endfor %}
+
+	</tbody>
+</table>
+</div>
+ <div style="text-align: center;margin-top: 10px;">
+        <a id="resetBtn" href="#" class="easyui-linkbutton" iconcls="icon-history" data-options="" onclick="retuTo()">Return</a>
+    </div>
+
+
+
+</body>
+</html>
