@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <link rel="shortcut icon" type="image/x-icon"   href="{% static 'images/bitbug_favicon.ico' %}" >
+    <link rel="stylesheet" type="text/css" href="{% static 'jquery-easyui-1.8.8/themes/bootstrap/easyui.css' %}">
+	<link rel="stylesheet" type="text/css" href="{% static 'jquery-easyui-1.8.8/themes/icon.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'jquery-easyui-1.8.8/demo/demo.css' %}">
+
+   <link rel="stylesheet" type="text/css" href="{% static 'navigation/style.css' %}">
+    <script type="text/javascript" src="{% static 'jquery-easyui-1.8.8/jquery.min.js' %}"></script>
+	<script type="text/javascript" src="{% static 'jquery-easyui-1.8.8/jquery.easyui.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'jquery-easyui-1.8.8/form.js' %}"></script>
+
+    <title>CRTCrispr</title>
+</head>
+<style>
+
+   input[type="checkbox"] {
+      background-color: #fff;
+      border: 2px solid #333;
+       border-color: #0E2D5F;
+       accent-color: #ffab3f;
+       color: #00bbee;
+       height: 16px;
+       width: 16px;
+       margin-top: 2px;
+    }
+   input[type="checkbox"]:checked:before{
+       background-color: #fff;
+      border: 2px solid #333;
+       border-color: #0E2D5F;
+       accent-color: #ffab3f;
+       color: #00bbee;
+       height: 16px;
+       width: 16px;
+        margin-top: 2px;
+   }
+    textarea {
+        position:  relative;
+        border:  1px solid  #D4D4D4;
+        #background-color:  #CCE8CF;
+        vertical-align:  middle;
+        display:  inline-block;
+        white-space:  pre-wrap;
+        margin:  0;
+        padding:  0;
+        -moz-border-radius:  5px  5px  5px  5px;
+        -webkit-border-radius:  5px  5px  5px  5px;
+        border-radius:  5px  5px  5px  5px;
+        font-size: 13px;
+    }
+</style>
+
+<script>
+
+$(function () {
+
+        $(".easyui-accordion .panel-header").click();
+        $(".easyui-accordion .panel-header:last").click();
+
+})
+
+function checkbox(obj)
+{
+}
+
+function clear()
+{
+    $('#criForm').form('clear')
+}
+
+
+
+function submitForm()
+{
+    var preWay = "";
+    var userEmail = $('#userEmail').val()
+    //获取
+    if ($('#cnnpreWay').prop('checked')) {
+    // do something
+        preWay += ",CNN";
+    }
+    if ($('#rnnpreWay').prop('checked')) {
+    // do something
+        preWay += ",RNN";
+    }
+    if ($('#tranpreWay').prop('checked')) {
+    // do something
+       preWay += ",TRANSFORM";
+    }
+    $("#preWay").val(preWay);
+
+    if(preWay == "")
+    {
+
+        $.messager.show({
+                title:'Warning',
+                msg:'Please select at least one prediction method.',
+                timeout:5000,
+                showType:'slide'
+            });
+
+        return;
+    }
+    if (userEmail == "")
+    {
+        $.messager.show({
+                title:'Warning',
+                msg:'Please provide your email in Step 4.',
+                timeout:5000,
+                showType:'slide'
+            });
+
+        return;
+    }
+
+    //document.criForm.submit();
+    //$('#criForm').form('submit');
+    //增加遮罩层
+    $.messager.progress({
+        title: 'Tips',
+        msg: 'Data is being analyzed...',
+        text: 'Do not close current webpage!'
+    });
+    var isValid = $("#criForm").form('validate');
+            if (!isValid) {
+                $.messager.progress('close');//关闭遮罩
+            }
+            else {
+                 document.criForm.submit();
+            }
+
+    /*提交表单
+    $("#criForm").form('submit', {
+        url: '/sgDesigner/analysis',
+        onSubmit: function () {
+            var isValid = $("#criForm").form('validate');
+            if (!isValid) {
+                $.messager.progress('close');//关闭遮罩
+            }
+            return isValid;    // 返回false终止表单提交
+        },
+        success: function (result) {
+            $.messager.progress('close');//关闭遮罩
+            $.messager.show({
+                title: '提示',
+                msg: '数据保存成功。'
+            });
+        }, failure: function (result) {
+            $.messager.progress('close');//关闭遮罩
+            $.messager.show({
+                title: '提示',
+                msg: '数据保存失败。'
+            });
+        }
+    });*/
+
+
+
+
+
+
+
+}
+
+
+</script>
+<body>
+   <!--头部导航栏 -->
+
+<div class="nav" style="position: absolute;">
+     <img src="{% static 'images/gene_logo.png' %}" style="width: 69px;height: 60px;z-index: -1;border-radius:90% ">
+
+    <ul class="ul_top">
+
+        <li><a href="/sgDesigner/index/" >Home</a></li>
+        <li><a href="/sgDesigner/design/" >sgRNA Design</a></li>
+        <li><a href="/sgOffTarget/design/" class="a-active">Off Target</a></li>
+        <li><a href="/sgDesigner/contact/">Contact</a></li>
+        <li><a href="/sgDesigner/about/">About</a></li>
+
+       <!-- <li><a href="/sgDesigner/login/" style="float: right;margin-right: -800px;color:#ff9900;font-weight: 20">Login In</a></li>
+
+-->
+    </ul>
+
+</div>
+
+<form action="/sgOffTarget/analysis/" method="post" id="criForm" name="criForm" enctype="multipart/form-data">
+    {% csrf_token %}
+  <div id="step" class="easyui-accordion" data-options="multiple:true" style="width:1000px;margin: 80px 20px 0 80px;" >
+      <!--<div title="Step1:Select the appropriate pam sequence" data-options="selected:true" style="width:1000px;overflow:auto;padding:10px;">-->
+    <div title="Step1:Select the appropriate PAM sequence" data-options="" style="width:1000px;overflow:auto;padding:10px;">
+       <div>
+            PAM type<span style="color:red;">*</span>:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <input id="pamtype" name="pamtype" class="easyui-combobox" data-options="
+                    valueField: 'id',
+                    textField: 'text',
+                    url: '{% static 'json/pamlist.json' %}',
+                    onSelect: function(rec){
+                    $('#pamCode').textbox('setValue', rec.code);
+                    }" required="true">
+        </div>
+        <div>
+             PAM sequence<span style="color:red;">*</span>:	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <input  class="easyui-textbox" id="pamCode" name="pamCode"  labelWidth="120px" data-options="required:true,novalidate:true" required="true"/>
+        </div>
+
+    </div>
+    <div title="Step2:Specify the gene manipulation" data-options="" style="padding:10px;">
+
+        <div>
+             <div>
+                Select a genome:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                 <select id="genName" name="genName" class="easyui-combobox" name="dept" style="width:200px;">
+                    <option value="hg19">hg19</option>
+                     <option value="hg38">hg38</option>
+                </select>
+
+            </div>
+
+            <div>
+                gene sequence:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <textarea style="height:100px;width:600px;"  id="genSeq" name="genSeq"> </textarea>
+            </div>
+        </div>
+
+    </div>
+    <div title="Step3:Fill in  the mismatch params:" data-options="">
+       <div>
+             Mismatch number<span style="color:red;">*</span>:	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <input  class="easyui-textbox" id="misMatchnumber" name="misMatchnumber"  labelWidth="120px" data-options="required:true,novalidate:true" required="true"/>
+        </div>
+        <div>
+             DNA Bulge Size<span style="color:red;">*</span>:	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <input  class="easyui-textbox" id="dnabulgeSize" name="dnabulgeSize"  labelWidth="120px" data-options="required:true,novalidate:true" required="true"/>
+        </div>
+
+         <div>
+             RNA Bulge Size<span style="color:red;">*</span>:	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <input  class="easyui-textbox" id="rnabulgeSize" name="rnabulgeSize"  labelWidth="120px" data-options="required:true,novalidate:true" required="true"/>
+        </div>
+
+    </div>
+      <div title="Step4: Provide your email,we will send results to the email" data-options="selected:true">
+         Email<span style="color:red;">*</span>:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input class="easyui-textbox" data-options="prompt:'Enter a email address...',validType:'email',required:true" name="userEmail" id="userEmail" style="width: 300px;" labelWidth="600px;" >
+
+
+    </div>
+</div>
+    <div  style="float: right;margin-top: -600px;width: 310px;" >
+
+        <img src="{% static 'images/tips.png' %}" style="width: 100%;margin-right: 80px;">
+        </div>
+
+    </div>
+</form>
+<div style="text-align: center;margin-top: 30px;">
+    <a id="resetBtn" href="#" class="easyui-linkbutton" data-options="" onclick="clear();">Reset</a>
+    <a id="submitBtn" href="javascript:void(0);" class="easyui-linkbutton" onclick="submitForm();" data-options="">Submit</a>
+</div>
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>
