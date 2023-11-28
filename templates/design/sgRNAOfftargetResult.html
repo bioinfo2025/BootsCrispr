@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <link rel="shortcut icon" type="image/x-icon"   href="{% static 'images/bitbug_favicon.ico' %}" >
+    <link rel="stylesheet" type="text/css" href="{% static 'jquery-easyui-1.8.8/themes/bootstrap/easyui.css' %}">
+	<link rel="stylesheet" type="text/css" href="{% static 'jquery-easyui-1.8.8/themes/icon.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'jquery-easyui-1.8.8/demo/demo.css' %}">
+
+   <link rel="stylesheet" type="text/css" href="{% static 'navigation/style.css' %}">
+    <script type="text/javascript" src="{% static 'jquery-easyui-1.8.8/jquery.min.js' %}"></script>
+	<script type="text/javascript" src="{% static 'jquery-easyui-1.8.8/jquery.easyui.min.js' %}"></script>
+
+    <title>CRTCrispr Result</title>
+    <style>
+
+
+    </style>
+    <script>
+        //跳转页面
+      function gotoFigure(genName,dataIndex)
+      {
+          let userToken = $("#userToken").val();
+          window.open('/sgDesigner/sgRNAFigure?genName='+genName+'&dataIndex='+dataIndex+'&userToken='+userToken, '_blank');
+      }
+
+    </script>
+
+</head>
+<body>
+   <!--头部导航栏 -->
+   <div class="nav" style="position: absolute;">
+     <img src="{% static 'images/gene_logo.png' %}" style="width: 69px;height: 60px;z-index: -1;border-radius:90% ">
+
+    <ul class="ul_top">
+
+        <li><a href="/sgDesigner/index/" >Home</a></li>
+        <li><a href="/sgDesigner/design/" >sgRNA Design</a></li>
+        <li><a href="/sgOffTarget/design/" class="a-active" >Off Target Results</a></li>
+        <li><a href="/sgDesigner/contact/">Contact</a></li>
+        <li><a href="/sgDesigner/about/">About</a></li>
+
+         <!--<li><a href="/sgDesigner/login/" style="float: right;margin-right: -800px;color:#ff9900;font-weight: 20">Login In</a></li>-->
+    </ul>
+</div>
+   <!--<div id="container" style="height: 300px;margin-top: 50px;"></div>-->
+<!--按照序列的长度进行tab-->
+
+<div style="margin-top: 40px;height: 550px;">
+    <b> Analysis Chart of Results</b>
+  <iframe src="/sgOffTarget/showOverview?userToken={{ userToken }}&genName={{ genName }}" style="width: 100%;height:100%;border:none"></iframe>
+</div>
+<div  style="width:100%;margin: 20px 20px 0 80px;" >
+<!--<b> Analysis Table of Results</b>-->
+  <!---------{{ data | length }}-->
+
+
+ <input type="hidden" name="userToken" id="userToken" value="{{ userToken}}">
+    <table class="easyui-datagrid"  >
+    <thead>
+		<tr>
+			<th data-options="field:'sgRNA'">Bulge type</th>
+            <th data-options="field:'GC content'" >GC content(%)</th>
+			<th data-options="field:'Location'" >Location</th>
+            <th data-options="field:'Strand'" >Strand</th>
+            <th data-options="field:'CFD-Score'" >CFD-Score</th>
+            <th data-options="field:'CNNScore'"  >CNN Score</th>
+            <th data-options="field:'RNNScore'"  >RNN Score</th>
+            <th data-options="field:'TransformerScore'"  >Transformer Score</th>
+            <th data-options="field:'OffTargetScore'" >OffTarget Score </th>
+            <th data-options="field:'misMatch'" >misMatch</th>
+            <th data-options="field:'Figures'" >Figures</th>
+        </tr>
+
+
+    </thead>
+
+    <tbody>
+
+    {% for field in data %}
+
+        <tr>
+         <td>
+    	{{forloop.counter}} - {{ field.RNAValue }}
+        </td>
+        <td>
+    	{{ field.gcPerc }}
+        </td>
+        <td>
+    	{{ field.startLoc }}~{{ field.endLoc }}
+        </td>
+        <td>
+    	{{ field.strand }}
+        </td>
+       <td>
+    	{{ field.CFDscore }}
+        </td>
+            <td>
+    	{{ field.cnnScore }}
+        </td>
+            <td>
+    	{{ field.rnnScore }}
+        </td>
+
+             <td>
+    	{{ field.transScore }}
+        </td>
+        <td>
+    	{{ field.OffTargetScore }}
+        </td>
+             <td>
+    	{{ field.misMatch }}
+        </td>
+         <td>
+    	<a id="btn" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search'" onclick="gotoFigure({{  genName }},{{forloop.counter}});">SHOW</a>
+        </td>
+
+
+        </tr>
+    {% endfor %}
+
+	</tbody>
+</table>
+</div>
+
+
+
+
+</body>
+</html>
