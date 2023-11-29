@@ -29,9 +29,16 @@ Note:
 
 2. sgRNA Design
 
-![design1](static/images/Figures5.png)
-![design2](static/images/Figures6-A.png)
-![design3](static/images/Figures6-B.png)
+![design1](static/images/Figure5.png)
+![design2](static/images/Figure6-A.png)
+![design3](static/images/Figure6-B.png)
+![design4](static/images/Figure7.png)
+
+3. Search Off Targets
+
+![design1](static/images/Figure8.png)
+![design2](static/images/Figure9-A.png)
+![design3](static/images/Figure9-B.png)
 
 
 
