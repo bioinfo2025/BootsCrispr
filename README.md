@@ -25,7 +25,7 @@ Note:
 ## Usage
 1. sgRNA Design
 
-![sgRNA Design](/Users/FryTsui/anna/study/BootsCrispr/图/Figure5.png)
+![sgRNA Design](static/images/img_6.png)
 
 
 
