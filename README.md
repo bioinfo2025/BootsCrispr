@@ -23,9 +23,15 @@ Note:
 2. In addition to conventional species, users can provide us with species information that needs to be initialized for user data analysis and design.
 
 ## Usage
-1. sgRNA Design
+1. home
 
-![sgRNA Design](static/images/img_6.png)
+![home](static/images/img_6.png)
+
+2. sgRNA Design
+
+![design1](static/images/Figures5.png)
+![design2](static/images/Figures6-A.png)
+![design3](static/images/Figures6-B.png)
 
 
 
