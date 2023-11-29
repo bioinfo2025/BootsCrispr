@@ -36,12 +36,13 @@ Note:
 
 3. Search Off Targets
 
-![design1](static/images/Figure8.png)
-![design2](static/images/Figure9-A.png)
-![design3](static/images/Figure9-B.png)
+![design5](static/images/Figure8.png)
+![design6](static/images/Figure9-A.png)
+![design7](static/images/Figure9-B.png)
 
 
 4. About
+![about](static/images/about.jpg)
 
 
 #### Prediction
