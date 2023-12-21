@@ -1,9 +1,10 @@
 # BootsCrispr
+BootsCrispr is available via http://bioinfo2025.w1.luyouxia.net/sgDesigner/index/.
+
 
 ## Introduction
 BootsCrispr is a web-based tool used for sgRNA assisted design. In addition to assisting in sgRNA assisted design, it can
 also search for potential off target locations within sequences.
- 
 
 The current version is compatible with three network models: CNN, RNN, and Transformer.
 
