@@ -1,5 +1,5 @@
 # BootsCrispr
-BootsCrispr is available via http://bioinfo2025.w1.luyouxia.net/sgDesigner/index/.
+
 
 
 ## Introduction
